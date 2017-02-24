@@ -13,11 +13,11 @@ Sys.sleep(2)
 
 # enter search inputs and run the search
 
-boroselect <- remDr$findElement("css selector", "#boro1")
+boroselect <- remDr$findElement("css selector", "#boro1") #dropdown menu
 boroselect$clickElement()
 
 Sys.sleep(1)
-manhattan <- remDr$findElement("css selector", "#boro1 > option:nth-child(2)")
+manhattan <- remDr$findElement("css selector", "#boro1 > option:nth-child(2)") #Each of the elements of a dropdown is has own selector
 manhattan$clickElement()
 
 housenumber <- remDr$findElement("css selector", 'body > div > table:nth-child(2) > tbody > tr:nth-child(3) > td > table > tbody > tr > td:nth-child(3) > input[type="text"]')
@@ -69,14 +69,25 @@ while(morepages == TRUE) {
   for (i in 2:length(tablerows)){
     
     # extract the row's html...
-    tableRowHTML <- tablerows[[ i ]]$getElementAttribute("outerHTML")[[1]]
-    # ...and hand it off to rvest
+    tableRowHTML <- tablerows[[ i ]]$getElementAttribute("outerHTML")[[1]] #grabbing the i'th row, grabbing the row and everything inside it (the HTML)
+    # ...and hand it off to rvest (Use RVest here due to the use of "i")
     tableRowRvest <- read_html(tableRowHTML)
     
-    # split the row into an array of cells
-    tableCells <- tableRowRvest %>% html_nodes("td")
+    #ALTERNATIVEI TO USE RSelenium:
+    # cellSelector <- paste("body > center:nth-child(1) > table:nth0child(3) >tbody:nth-child(1) >tr:nth0child(",i,") >th:nth-child(1)")
+    # cell2selector <- paste("body > center:nth-child(1) > table:nth0child(3) >tbody:nth-child(1) >tr:nth0child(",i,") >th:nth-child(3)")
+    # cell3selector <- paste("body > center:nth-child(1) > table:nth0child(3) >tbody:nth-child(1) >tr:nth0child(",i,") >th:nth-child(4)")
     
-    # grab the data (and remove line breaks where needed)
+    # then loop through and get the text for each of the TEXT (see GitHub for more info)
+    
+    
+    
+    
+    # split the row into an array of cells (denoted by "td")
+    tableCells <- tableRowRvest %>% html_nodes("td")
+    # alternative: tableCells <- html_nodes(tableRowRvest, "td")
+    
+    # grab the data (and remove line breaks where needed) & convert into text:
     violationNumber <- html_text(tableCells[1])
     violationNumber <- gsub("[\r\n]", "", violationNumber)
     violationType <- html_text(tableCells[3])
